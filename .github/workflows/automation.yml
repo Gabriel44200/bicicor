@@ -1,0 +1,24 @@
+name: Automatic Station Status Extraction
+
+on:
+  schedule:
+    - cron: "30-59/10 5-23 * * *"
+
+jobs:
+  extract_status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Execute script
+        run: python extract_data.py
