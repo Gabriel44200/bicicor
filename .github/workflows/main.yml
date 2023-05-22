@@ -21,3 +21,10 @@ jobs:
 
       - name: Execute script
         run: python extract_data.py
+- name: Commit and push changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Update dataset $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
