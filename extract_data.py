@@ -27,4 +27,10 @@ file_path = os.path.join(date_folder, file_name)
 with open(file_path, "w") as status_file:
     json.dump(station_status_data, status_file)
 
-print("Station status extraction completed. File saved in:", file_path)
+# Commit and push changes to GitHub
+commit_message = f"Auto-commit: Add dataset {current_date} {current_time}"
+os.system("git add .")
+os.system(f"git commit -m \"{commit_message}\"")
+os.system("git push origin main")
+
+print("Station status extraction completed. Dataset saved and pushed to GitHub.")
