@@ -1,11 +1,11 @@
 import requests
 import json
 import os
+import git
 from datetime import datetime
 
 # Fetch the JSON data from the URL
 station_status_url = "https://acoruna.publicbikesystem.net/customer/ube/gbfs/v1/en/station_status"
-
 station_status_response = requests.get(station_status_url)
 station_status_data = station_status_response.json()
 
@@ -27,10 +27,26 @@ file_path = os.path.join(date_folder, file_name)
 with open(file_path, "w") as status_file:
     json.dump(station_status_data, status_file)
 
-# Commit and push changes to GitHub
-commit_message = f"Auto-commit: Add dataset {current_date} {current_time}"
-os.system("git add .")
-os.system(f"git commit -m \"{commit_message}\"")
-os.system("git push origin main")
+print("Station status extraction completed. File saved in:", file_path)
 
-print("Station status extraction completed. Dataset saved and pushed to GitHub.")
+# Define the local path to your GitHub repository and clone it if not present
+repo_path = "C:/Users/Admin/bicicoru"  # Ruta local de tu repositorio de GitHub
+
+# Clonar el repositorio si aún no está presente en la ruta local
+if not os.path.exists(repo_path):
+    git.Repo.clone_from("https://github.com/Gabriel44200/bicicor.git", repo_path)
+
+# Inicializar el repositorio
+repo = git.Repo(repo_path)
+
+# Agregar el archivo JSON al índice
+repo.index.add([file_path])
+
+# Realizar un commit con un mensaje descriptivo
+commit_message = f"Actualizar datos de estación: {current_date} {current_time}"
+repo.index.commit(commit_message)
+
+# Hacer push de los cambios al repositorio remoto
+origin = repo.remote(name='origin')
+origin.push()
+
